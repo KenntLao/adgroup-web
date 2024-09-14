@@ -3,7 +3,6 @@
 		<h2>Dashboard</h2>
 		<div class="card">
 			<h3>Welcome to the Admin Dashboard</h3>
-			<p>This is your main area where you can manage your application.</p>
 		</div>
 	</div>
 </template>
@@ -15,10 +14,10 @@ export default {
 </script>
 
 <style scoped>
-.card {
-  background: #fff;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+	.card {
+		background: #fff;
+		padding: 1rem;
+		border-radius: 8px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	}
 </style>
