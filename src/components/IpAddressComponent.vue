@@ -1,5 +1,17 @@
 <template>
 	<div class="ip-address-container">
+		<NotificationComponent
+			v-if="successMessage"
+			:message="successMessage"
+			type="success"
+			@clear="successMessage = ''"
+		/>
+		<NotificationComponent
+			v-if="errorMessage"
+			:message="errorMessage"
+			type="error"
+			@clear="errorMessage = ''"
+		/>
 		<header>
 			<h1>IP Addresses</h1>
 			<button @click="openAddIPModal" class="add-ip-btn">Add IP Address</button>
@@ -59,14 +71,19 @@
 <script>
 import { ref, onMounted } from 'vue';
 import axios from '../axios';
+import NotificationComponent from './NotificationComponent.vue';
 
 export default {
+	components: {
+		NotificationComponent
+	},
 	setup() {
 		const ipAddresses = ref([]);
 		const showModal = ref(false);
 		const editingIP = ref(false);
 		const ipForm = ref({ id: null, ip_address: '', label: '' });
 		const errorMessage = ref('');
+		const successMessage = ref('');
 		const haveData = ref(false);
 
 		const fetchIPAddresses = async () => {
@@ -98,12 +115,22 @@ export default {
 			try {
 				if (editingIP.value) {
 					await axios.patch(`/ip-address/${ipForm.value.id}`, ipForm.value);
+					successMessage.value = 'IP address updated successfully';
 				} else {
 					await axios.post('/ip-address', ipForm.value);
+					successMessage.value = 'IP address added successfully';
 				}
+
+				setTimeout(() => successMessage.value = '', 3000);
+        		errorMessage.value = '';
 				
 			} catch (error) {
-				errorMessage.value = `Error: ${error.response.data.message || 'Invalid Data.'}`;
+				if (error.response && error.response.data && error.response.data.message) {
+					errorMessage.value = `Error: ${error.response.data.message}`;
+				} else {
+					errorMessage.value = 'An unexpected error occurred. Please try again.';
+				}
+				successMessage.value = '';
 			}
 
 			if (errorMessage.value == '') {
@@ -128,6 +155,7 @@ export default {
 			saveIP,
 			closeModal,
 			errorMessage,
+			successMessage,
 			haveData
 		};
 	},
