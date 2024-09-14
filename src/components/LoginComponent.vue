@@ -29,23 +29,23 @@ export default {
         const errorMessage = ref('');
 
         const login = async () => {
-        try {
-            const response = await axios.post('http://adgroup-api.test/api/auth/login', {
-            email: email.value,
-            password: password.value,
-            });
-            localStorage.setItem('authToken', response.data.token);
-            window.location.href = '/dashboard';
-        } catch (error) {
-            errorMessage.value = 'Invalid email or password.';
-        }
+            try {
+                const response = await axios.post('http://adgroup-api.test/api/auth/login', {
+                    email: email.value,
+                    password: password.value,
+                });
+                localStorage.setItem('authToken', response.data.token);
+                window.location.href = '/dashboard';
+            } catch (error) {
+                errorMessage.value = `Error: ${error.response.data.message || 'Invalid email or password.'}`;
+            }
         };
 
         return {
-        email,
-        password,
-        errorMessage,
-        login,
+            email,
+            password,
+            errorMessage,
+            login,
         };
     },
 };
